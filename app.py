@@ -10,8 +10,8 @@ def get_similarity_score_marking_guide(question: str, marking_guide: str, answer
 
     system_message = (
         f"As an experienced professor, you asked the question: {question}. Compare the student answer: '{answer}' to the marking guide: '{marking_guide}'. "
-        "Provide a single semantic similarity score between 0 and 1 based on correctness but focusing mainly on how well the answer matches the marking guide."
-        f" Apply a strictness factor of {strictness} over 1 to your evaluation. Return only the score, no text or feedback at all, just the score ONLY."
+        "Provide a single semantic similarity score between 0 and 1 based on correctness but focusing mainly on how well the answer matches the marking guide ."
+        f" Apply a strictness factor of {strictness} over 1 to your evaluation. if strictness factor is not 1, only consider semantic similarity, not word matching. The most important thing is the students answer 'means' the same thing as the marking guide provided. Return only the score, no text or feedback at all, just the score ONLY."
     )
     messages = [{"role": "system", "content": system_message}]
     
