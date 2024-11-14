@@ -1,20 +1,16 @@
-# Required imports
 import streamlit as st
 from groq import Groq
 import os
 
-# Set up Groq API client
+# Streamlit secrets
 GROQ_API_KEY = st.secrets["keys"]["GROQ_API_KEY"]
 groq_client = Groq(api_key=GROQ_API_KEY)
 
-# Scoring functions
-def get_similarity_score_marking_guide(marking_guide: str, answer: str, strictness: float) -> float:
-    """
-    Computes a similarity score between the student's answer and the marking guide, considering strictness.
-    """
+def get_similarity_score_marking_guide(question: str, marking_guide: str, answer: str, strictness: float) -> float:
+
     system_message = (
-        f"As an experienced professor, compare the student answer: '{answer}' to the marking guide: '{marking_guide}'. "
-        "Provide a single semantic similarity score between 0 and 1 based on correctness, focusing only on how well the answer matches the marking guide."
+        f"As an experienced professor, you asked the question: {question}. Compare the student answer: '{answer}' to the marking guide: '{marking_guide}'. "
+        "Provide a single semantic similarity score between 0 and 1 based on correctness but focusing mainly on how well the answer matches the marking guide."
         f" Apply a strictness factor of {strictness} over 1 to your evaluation. Return only the score, no text or feedback at all, just the score ONLY."
     )
     messages = [{"role": "system", "content": system_message}]
@@ -27,12 +23,9 @@ def get_similarity_score_marking_guide(marking_guide: str, answer: str, strictne
     return float(chat_response.choices[0].message.content)
 
 def get_correctness_score_no_marking_guide(question: str, answer: str, strictness: float) -> float:
-    """
-    Generates a basic correctness score for the answer without a marking guide, considering strictness.
-    """
     system_message = (
         f"As a professor, evaluate the answer '{answer}' to the question '{question}'. "
-        "Provide a correctness score between 0 and 1 based on your pre-trained knowledge, considering how well it addresses the question."
+        "Provide a correctness score between 0 and 1 based on your pre-trained knowledge, considering how well it addresses the question. Your focus is on effort not perfection."
         f" Apply a strictness factor of {strictness} over 1 to your evaluation. Return only the score, no text or feedback at all, just the score ONLY."
     )
     messages = [{"role": "system", "content": system_message}]
@@ -45,8 +38,7 @@ def get_correctness_score_no_marking_guide(question: str, answer: str, strictnes
     return float(chat_response.choices[0].message.content)
 
 def score_grammar(answer: str, strictness: float) -> float:
-    # Grammar scoring function with strictness
-    system_message = (f"Evaluate the grammar, spelling, and command of English of the answer: '{answer}'. Provide a score between 0 and 1 based on strictness of {strictness}."
+    system_message = (f"Evaluate the grammar, spelling, and command of English of the answer: '{answer}'. Provide a score between 0 and 1 based on strictness of {strictness} over 1."
                         "Return only the score, no text or feedback at all, just the score ONLY.")
     messages = [{"role": "system", "content": system_message}]
     
@@ -59,7 +51,7 @@ def score_grammar(answer: str, strictness: float) -> float:
 
 def score_structure(answer: str, strictness: float) -> float:
     # Structure scoring function with strictness
-    system_message = (f"Evaluate the structure and organization of the answer: '{answer}'. Provide a score between 0 and 1 based on strictness of {strictness}."
+    system_message = (f"Evaluate the structure and organization of the answer: '{answer}'. Provide a score between 0 and 1 based on strictness of {strictness} over 1."
                       "Return only the score, no text or feedback at all, just the score ONLY.")
     messages = [{"role": "system", "content": system_message}]
     
@@ -74,7 +66,7 @@ def score_relevance(question: str, answer: str, strictness: float) -> float:
     # Relevance scoring function with strictness
     system_message = (
         f"Evaluate the relevance of the answer '{answer}' to the question '{question}'. "
-        "Provide a score between 0 and 1 based on how well it addresses the key points and considering a strictness factor of {strictness}."
+        f"Provide a score between 0 and 1 based on how well it addresses the key points and considering a strictness factor of {strictness} over 1."
         "Return only the score, no text or feedback at all, just the score ONLY."
     )
     messages = [{"role": "system", "content": system_message}]
@@ -91,7 +83,7 @@ def get_score(question: str, answer: str, marking_guide: str, max_score: int, us
     
     if use_marking_guide:
         # If using marking guide, calculate a similarity score only
-        similarity_score = get_similarity_score_marking_guide(marking_guide, answer, strictness)
+        similarity_score = get_similarity_score_marking_guide(question, marking_guide, answer, strictness)
         return round(similarity_score * max_score, 2)
     
     else:
@@ -110,12 +102,12 @@ def get_score(question: str, answer: str, marking_guide: str, max_score: int, us
 
 # Feedback functions
 
-def generate_feedback_marking_guide(marking_guide: str, answer: str, score: float) -> str:
+def generate_feedback_marking_guide(question: str, marking_guide: str, answer: str, score: float) -> str:
     
     system_message = (
-        f"As a professor, compare the student answer '{answer}' with the marking guide '{marking_guide}'. "
-        "Provide a structured breakdown including (1) The correct answer, (2) Parts of the correct answer the student got, "
-        "(3) Parts of the correct answer the student missed."
+        f"As a professor, you awarded the score of {score} to a student who answered the question: {question}. Compare the student answer '{answer}' with the marking guide '{marking_guide}'. "
+        "Provide a structured breakdown including (1) The correct answer/ marking guide, (2) Strengths of the student answer/ how well the student's answer met the standard of the marking guide, "
+        "(3) Parts of the correct answer the student missed. All as a metric/ explanation for the score you gave."
     )
     messages = [{"role": "system", "content": system_message}]
     
@@ -131,15 +123,13 @@ def generate_feedback_marking_guide(marking_guide: str, answer: str, score: floa
 
 def generate_feedback_no_marking_guide(question: str, answer: str, grammar_score: float, structure_score: float,
                                        relevance_score: float, score: float) -> str:
-    """
-    Provides feedback for each criterion, outlining strengths, weaknesses, and specific improvement areas.
-    """
     system_message = (
-        f"As a professor, provide feedback on the answer '{answer}' to the question '{question}' by discussing "
+        f"As a professor, you awarded the score of {score} to a student who provided this answer '{answer}' to the question '{question}'."
+        "Provide feedback to the student to let them understand why you gave them that score and let them be aware of the strengths and weaknesses of their answer."
+        "You may have considered one of the following (if the score is 0, it may be possible you didn't consider it at all so don't provide feedback on it if it is zero), so provide feedback on:\n"
         f"(1) Grammar Score: {grammar_score} - highlight areas of strength and errors, "
         f"(2) Structure Score: {structure_score} - outline effective structure or organizational issues, "
         f"(3) Relevance Score: {relevance_score} - indicate if the answer addressed key points and relevance to the question. "
-        "Use the GROW framework to emphasize strengths, improvement areas, and mistakes."
     )
     messages = [{"role": "system", "content": system_message}]
     
@@ -193,7 +183,7 @@ if st.button("Grade Answer"):
     
     # Show feedback based on the grading method
     if use_marking_guide:
-        feedback = generate_feedback_marking_guide(marking_guide, answer, score)
+        feedback = generate_feedback_marking_guide(question, marking_guide, answer, score)
     else:
         grammar_score = score_grammar(answer, strictness) * grammar_weight
         structure_score = score_structure(answer, strictness) * structure_weight
