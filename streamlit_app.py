@@ -42,7 +42,7 @@ max_score = st.sidebar.number_input("Maximum Score for this Question", min_value
 st.sidebar.markdown("#### Customize Grading Rubrics")
 grammar_weight = st.sidebar.slider("Grammar Weight", 0.0, 1.0, 0.0)
 structure_weight = st.sidebar.slider("Structure Weight", 0.0, 1.0, 0.0)
-relevance_weight = st.sidebar.slider("Relevance Weight", 0.0, 1.0, 0.3)
+relevance_weight = st.sidebar.slider("Relevance Weight", 0.0, 1.0, 0.0)
 
 strictness = st.sidebar.slider("Strictness", 0.0, 1.0, 0.5)
 further_instructions = st.sidebar.text_area("Further Instructions (optional): ", "")
