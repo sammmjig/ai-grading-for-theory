@@ -18,6 +18,7 @@ def get_initial_score(question: str,
         return round(initial_score * max_score, 2)
 
 def get_final_score(initial_score: float,
+                    max_score: float,
                     grammar_score: float,
                     structure_score: float,
                     relevance_score: float,
@@ -39,9 +40,11 @@ def get_final_score(initial_score: float,
             grammar_score * normalized_grammar_weight +
             structure_score * normalized_structure_weight +
             relevance_score * normalized_relevance_weight
-        )
+        ) 
             
-            final_score = round((initial_score + weighted_impact) * 0.5, 2)
+            rubric_score = weighted_impact * max
+            
+            final_score = round((initial_score + rubric_score)/2,2)
 
             return final_score
         
