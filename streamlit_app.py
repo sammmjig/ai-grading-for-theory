@@ -96,7 +96,6 @@ if st.button("Grade Answer"):
                     relevance_weight, strictness, further_instructions
                 )
 
-            # Clear status placeholder after grading
             status_placeholder.empty()
 
             st.write(f"### Final Score: {final_score}/{max_score}")
