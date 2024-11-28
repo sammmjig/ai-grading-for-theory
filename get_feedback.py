@@ -84,7 +84,7 @@ def general_feedback(question: str,
         f"These adjustments were applied with a strictness factor of {strictness}."
         f"If provided, additional instructions were followed: {further_instruction}."
         f"The final score after adjustments is {final_score} out of the {max_score}."
-        "Now, provide a general, constructive, and personalized feedback summarizing how these components impacted the score."
+        "Now, provide a general, constructive, and personalized feedback summarizing how the components that were considered impacted the score."
         "Highlight the strengths and weaknesses in the student's answer and encourage improvement in specific areas. Justify the score you assigned."
     )
     

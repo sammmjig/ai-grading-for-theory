@@ -9,9 +9,10 @@ def score_relevance(question: str, answer: str, strictness: float) -> float:
     system_message = (
         f"Evaluate the relevance of the answer '{answer}' to the question '{question}'. "
         f"Provide a score between 0 and 1 based on how well it addresses the key points and considering a strictness factor of {strictness} over 1."
-        "The strictness factor tells you how lenient you should be in assessing the relevance of the answer to the question and assigning a score."
-        "If strictness factor is less than 0.7 over 1, always return maximum mark (1.0) if the student's answer is related to the question at least even if the idea is not complete or well put."
-        "Do not penalize the answer if it only nails the question on the head but does not provide extensive information, focus on the relevance of the answer to the question."
+        "The strictness factor tells you how lenient you should be in assessing how useful the answer is to addressing the question and assigning a score."
+        "If strictness factor is less than 0.4 over 1, always return maximum mark (1.0) if the student's answer is related to the question at least even if the idea is not complete or well put."
+        "If strictness factor is higher i.e. 0.75, be less lenient and critically assess the relevance ... the higher the strictness factor, the less lenient you should be."
+        "Do not penalize the answer if it only nails the question on the head but does not provide extensive information, focus on whether the answer is related to and sufficient for the specific question asked only."
         "Return only the score, no text or feedback at all, just the score ONLY."
     )
     messages = [{"role": "system", "content": system_message}]

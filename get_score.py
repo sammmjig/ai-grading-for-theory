@@ -44,7 +44,7 @@ def get_final_score(initial_score: float,
             
             rubric_score = weighted_impact * max_score
             
-            final_score = round((initial_score + rubric_score)/2,2)
+            final_score = round((initial_score + rubric_score)/2, 2)
 
             return final_score
         

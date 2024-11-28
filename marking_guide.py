@@ -12,9 +12,11 @@ def similarity_score(question: str, marking_guide: str, answer: str, further_ins
         "Provide a single semantic similarity score between 0.0 (minimum score) and 1.0 (maximum score) based on general correctness coupled with how well the answer relates to the marking guide."
         "Do not penalize the student's answer if they immply the same thing as/ something close to the marking guide but used different words."
         f"VERY IMPORTANTLY: Apply a strictness factor of {strictness} over 1 to your evaluation. The strictness factor tells you how lenient you should be in assessing the student answer and assigning a score. "
-        "If strictness factor is less than 0.7 over 1, always return maximum mark (1.0) so far the student answer shows the student has an idea even if the idea isn't complete or exactly the same as marking guide, return maximum mark of 1.0."
+        "If strictness factor is less than 0.4 over 1, always return maximum mark (1.0) so far the student answer shows the student has an idea even if the idea isn't complete or exactly the same as marking guide, return maximum mark of 1.0."
+        "If the strictness factor is greater than 0.4 over 1, the higher the strictness factor the less lenient you should be in assessing the student's answer in relation to the marking guide and or in correctness in general (the student's idea) and assign a score."
+        "If strictness factor is high i.e. 0.8 over 1.0, then shabby answers that do not relate to the marking guide or have enough information to answer the question should not be awarded maximum mark but still award some marks for general ideas even if not complete."
         "Do not penalize grammatical errors or spelling mistakes, focus on the meaning of the answer."
-        f"Follow these further instructions: {further_instructions}"
+        f"MOST IMPORTANT: Consider if these further instructions: {further_instructions} are met. If no further instruction is provided, ignore else override strictness factor and penalize answers that don't satisfy the further instructions when assigning score:"
         "Return only the score, no text or feedback at all, just the score ONLY."
     )
     messages = [{"role": "system", "content": system_message}]
