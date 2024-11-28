@@ -42,7 +42,7 @@ def get_final_score(initial_score: float,
             relevance_score * normalized_relevance_weight
         ) 
             
-            rubric_score = weighted_impact * max
+            rubric_score = weighted_impact * max_score
             
             final_score = round((initial_score + rubric_score)/2,2)
 
