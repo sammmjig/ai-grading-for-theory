@@ -9,7 +9,7 @@ from grammar import score_grammar
 
 # Streamlit settings
 st.set_page_config(
-    page_title="AutoExam",
+    page_title="Acad AI",
     page_icon="ACAD_AI_LOGO.png",
     layout="centered",
     initial_sidebar_state="auto"
