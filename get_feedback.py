@@ -28,7 +28,7 @@ def similarity_feedback(question: str,
         temperature=0.0
     )
     feedback = chat_response.choices[0].message.content
-    return f"Score: {initial_score}/{max_score}\n\n" + f"Correct answer: {marking_guide}\n\n" +  f"Your answer: {answer}\n\n" + feedback
+    return f"**Correct answer:** {marking_guide}\n\n" +  f"**Your answer:** {answer}\n\n" + feedback
 
 
 
@@ -97,9 +97,29 @@ def general_feedback(question: str,
     )
     
     feedback = chat_response.choices[0].message.content
+    rubrics_considered = []
+
+    # Check if each rubric weight is greater than zero and add it to the message
+    if grammar_weight > 0:
+        rubrics_considered.append(f"**Grammar score:** {grammar_score} (Weight: {grammar_weight})\n")
+    if structure_weight > 0:
+        rubrics_considered.append(f"**Structure score:** {structure_score} (Weight: {structure_weight})\n")
+    if relevance_weight > 0:
+        rubrics_considered.append(f"**Relevance score:** {relevance_score} (Weight: {relevance_weight})\n")
+
+    # If no rubric was considered, indicate that only the initial score was used
+    if not rubrics_considered:
+        rubrics_considered = ["Only the initial score was considered."]
+    else:
+        rubrics_considered = [f"{', '.join(rubrics_considered)}"]
+
+    # Combine all the rubrics message into one string
+    rubrics_message = " ".join(rubrics_considered)
+
     return (
-        f"Initial Score: {initial_score}/{max_score}\n\n"
-        f"Final Score: {final_score}/{max_score}\n\n"
-        f"Your Answer: {answer}\n\n"
-        f"Feedback:\n{feedback}"
+        f"**Initial Score:** {initial_score}/{max_score}\n\n"
+        f"**Final Score:** {final_score}/{max_score}\n\n"
+        f"**Rubrics Considered:**\n {rubrics_message}\n\n"
+        f"**Your Answer:** {answer}\n\n"
+        f"**Constructive Feedback:**\n{feedback}"
     )

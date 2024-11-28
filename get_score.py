@@ -41,7 +41,7 @@ def get_final_score(initial_score: float,
             relevance_score * normalized_relevance_weight
         )
             
-            final_score = (initial_score + weighted_impact) * 0.5
+            final_score = round((initial_score + weighted_impact) * 0.5, 2)
 
             return final_score
         
