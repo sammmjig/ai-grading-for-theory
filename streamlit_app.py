@@ -30,7 +30,7 @@ answer = st.text_area("Enter the Student's Answer", "")
 # Sidebar grading settings
 st.sidebar.header("Grading Settings")
 
-use_marking_guide = st.sidebar.toggle("Use Marking Guide", False,)
+use_marking_guide = st.sidebar.toggle("Use Marking Guide", value=False)
 
 if use_marking_guide == True:
     marking_guide = st.sidebar.text_area("Enter the Marking Guide: ", "")
