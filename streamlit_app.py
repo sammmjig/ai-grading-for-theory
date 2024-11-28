@@ -52,7 +52,7 @@ if st.button("Grade Answer"):
         grammar_score = score_grammar(answer, strictness)
         structure_score = score_structure(answer, strictness)
         relevance_score = score_relevance(question, answer, strictness)
-        final_score = get_final_score(initial_score, grammar_score, structure_score, relevance_score, grammar_weight, structure_weight, relevance_weight)
+        final_score = get_final_score(initial_score, max_score, grammar_score, structure_score, relevance_score, grammar_weight, structure_weight, relevance_weight)
 
         st.write(f"### Final Score: {final_score}/{max_score}")
         if final_score == initial_score:
