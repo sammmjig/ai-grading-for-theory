@@ -20,8 +20,8 @@ st.get_option("theme.primaryColor")
 # Streamlit UI
 
 st.logo("ACAD_AI_LOGO.png",)
-st.title("AutoExam")
-st.markdown("By Acad AI")
+st.title("Acad AI")
+st.markdown("### AI Grading System Demo")
 st.info("This is only a demo that lets you see the potential of AI in grading theory exams. You can grade student answers based on a marking guide or without one. You can also customize the grading criteria to suit your needs.")
 
 question = st.text_area("Enter a question", "")
